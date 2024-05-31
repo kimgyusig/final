@@ -16,5 +16,6 @@ public interface RequestsMapper {
   int insertLeaveRequest(LeaveRequestDto leaveRequest);
   List<RequestsDto>getList(Map<String, Object> map);
   int getRequestsCount();
-  RequestsDto getRequestsbyNo(int requestNo);
+  LeaveRequestDto getRequestsbyNo(int requestNo);
+  int modifyRequests(RequestsDto requests);
 }

@@ -19,15 +19,56 @@
   
   <association property="depart" javaType="DepartmentsDto">
    <id property="departmentNo" column="DEPARTMENT_NO"/>
-   <result property="name" column="DEPART_NAME"/>
+   <result property="departName" column="DEPART_NAME"/>
   </association>
   <association property="rank" javaType="RANKSDTO">
    <id property="rankNo" column="RANK_NO"/>
-   <result property="title" column="RANK_TITLE"/>
+   <result property="rankTitle" column="RANK_TITLE"/>
   </association>
   </association>
   </resultMap>
 
+
+   <resultMap id="LeaveRequestMap" type="LeaveRequestDto">
+    <id property="requests.requestNo" column="REQUEST_NO"/>
+    <result property="duration" column="DURATION"/>
+    <result property="leaveType" column="LEAVE_TYPE"/>
+    <result property="startDate" column="START_DATE"/>
+    <result property="endDate" column="END_DATE"/>
+
+    <association property="requests" javaType="RequestsDto">
+        <id property="requestNo" column="REQUEST_NO"/>
+        <result property="requestSort" column="REQUEST_SORT"/>
+        <result property="requestStatus" column="REQUEST_STATUS"/>
+        <result property="picNo" column="PIC_NO"/>
+        <result property="reason" column="REASON"/>
+        <result property="rejectReason" column="REJECT_REASON"/>
+        <result property="requestDate" column="REQUEST_DATE"/>
+
+        <association property="employees" javaType="EmployeesDto">
+            <id property="employeeNo" column="EMPLOYEE_NO"/>
+            <result property="name" column="NAME"/>
+            <result property="email" column="EMAIL"/>
+            <result property="phone" column="PHONE"/>
+            <result property="address" column="ADDRESS"/>
+            <result property="password" column="PASSWORD"/>
+            <result property="profilePicturePath" column="PROFILE_PICTURE_PATH"/>
+            <result property="hireDate" column="HIRE_DATE"/>
+            <result property="endDate" column="EMPLOYEE_END_DATE"/> <!-- 컬럼명 변경 -->
+
+            <association property="depart" javaType="DepartmentsDto">
+                <id property="departmentNo" column="DEPARTMENT_NO"/>
+                <result property="departName" column="DEPART_NAME"/>
+                <result property="parentDepartNo" column="PARENT_DEPART_NO"/>
+            </association>
+
+            <association property="rank" javaType="RanksDto">
+                <id property="rankNo" column="RANK_NO"/>
+                <result property="rankTitle" column="RANK_TITLE"/>
+            </association>
+        </association>
+    </association>
+  </resultMap>
 
   <insert id="insertRequest" parameterType="RequestsDto" useGeneratedKeys="true" keyProperty="requestNo" keyColumn="REQUEST_NO">
     <!-- REQUEST_NO를 미리 생성하고 keyProperty에 할당합니다 -->
@@ -63,13 +104,19 @@
         START_DATE,
         END_DATE,
         DURATION,
-        LEAVE_TYPE
+        LEAVE_TYPE,
+        NAME,
+        DEPART_NAME,
+        RANK_TITLE
     ) VALUES (
         #{requests.requestNo},
         #{startDate}, 
         #{endDate},
         #{duration},
-        #{leaveType}
+        #{leaveType},
+        #{requests.employees.name},
+        #{requests.employees.depart.departName},
+        #{requests.employees.rank.rankTitle}
     )
 </insert>
 
@@ -113,19 +160,25 @@ WHERE RN BETWEEN #{begin} AND #{end}
   
   <select id="getRequestsbyNo"
         parameterType="Map"
-        resultMap="RequestMap">
-   SELECT R.REQUEST_SORT, R.REQUEST_DATE, R.REASON, R.REJECT_REASON, R.PIC_NO, R.EMPLOYEE_NO, R.REQUEST_NO,NAME, D.DEPART_NAME, RA.RANK_TITLE AS RANK_TITLE
-FROM (
-    SELECT ROW_NUMBER() OVER(ORDER BY R.REQUEST_NO DESC) AS RN, 
-           R.REQUEST_NO, R.REQUEST_SORT, R.REQUEST_DATE, R.REASON, R.REJECT_REASON, R.PIC_NO, R.EMPLOYEE_NO, E.NAME, E.DEPARTMENT_NO, E.RANK_NO
-    FROM REQUESTS_T R 
-    INNER JOIN EMPLOYEES_T E ON R.EMPLOYEE_NO = E.EMPLOYEE_NO
-) R
-INNER JOIN DEPARTMENTS_T D ON R.DEPARTMENT_NO = D.DEPARTMENT_NO
-INNER JOIN RANKS_T RA ON R.RANK_NO = RA.RANK_NO
-WHERE RN BETWEEN #{begin} AND #{end}
+        resultMap="LeaveRequestMap">
+  SELECT 
+   L.REQUEST_NO, L.START_DATE, L.END_DATE, L.LEAVE_TYPE,
+    R.REQUEST_SORT, R.REQUEST_DATE, R.REASON, R.REQUEST_STATUS, R.REJECT_REASON, R.PIC_NO, R.EMPLOYEE_NO,
+    L.NAME AS EMPLOYEE_NAME,
+    L.RANK_TITLE,
+    L.DEPART_NAME
+FROM LEAVE_REQUEST_T L INNER JOIN REQUESTS_T R
+ON L.REQUEST_NO = R.REQUEST_NO
+WHERE L.REQUEST_NO =#{requestNo}
 </select>
 
 
+<update id="modifyRequests"
+	    parameterType="RequestsDto">
+	UPDATE REQUESTS_T
+	 SET REQUEST_SORT = #{requestSort}
+	 WHERE REQUEST_NO = #{requestNo}
+	
+</update>
 
 </mapper>

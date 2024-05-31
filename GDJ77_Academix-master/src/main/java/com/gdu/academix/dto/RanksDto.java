@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RanksDto {
   private int rankNo;
-  private String title;
+  private String rankTitle;
 }

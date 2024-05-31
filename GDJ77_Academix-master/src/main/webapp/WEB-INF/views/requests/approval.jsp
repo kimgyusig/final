@@ -20,7 +20,7 @@
   
   
   <div class="content-wrapper">
-  <div><a href="${contextPath}/requests/write.page">기안하기</a></div>
+  
   
   
   

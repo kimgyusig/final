@@ -89,12 +89,13 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
 </style>
 
-  <div>
-   종류
+  <div class="content-wrapper">
+  
    
-  </div>
+  
   
   
   <form action="${contextPath}/requests/write.do" method="POST">
@@ -147,37 +148,27 @@ button:hover {
         <input type="hidden" name="requestSort" value="1">
     </form>
 
-
+</div>
 <script>
 
-  const fnAttachCheck = () => {
-   document.getElementById('files').addEventListener('change', (evt) => {
-     const limitPerSize = 1024 * 1024 * 10;
-     const limitTotalSize = 1024 * 1024 * 100;
-     let totalSize = 0;
-     const files = evt.target.files;
-     const attachList = document.getElementById('attach-list');
-     attachList.innerHTML = '';
-     for(let i = 0; i < files.length; i++){
-       if(files[i].size > limitPerSize){
-         alert('각 첨부 파일의 최대 크기는 10MB입니다.');
-         evt.target.value = '';
-         attachList.innerHTML = '';
-         return;
-       }
-       totalSize += files[i].size;
-       if(totalSize > limitTotalSize){
-         alert('전체 첨부 파일의 최대 크기는 100MB입니다.');
-         evt.target.value = '';
-         attachList.innerHTML = '';
-         return;
-       }
-       attachList.innerHTML += '<div>' + files[i].name + '</div>';
-     }
-   })
- }
- 
-
+  
+// 폼 제출 이벤트 리스너를 추가합니다.
+document.querySelector('form').addEventListener('submit', function(event) {
+    // 휴가종류 필드의 값을 가져옵니다.
+    var leaveTypeValue = document.getElementById('leaveType').value;
+    
+    // 만약 휴가종류가 "연차"라면
+    if (leaveTypeValue === "연차") {
+        // 해당 필드의 값을 "0"으로 변경합니다.
+        document.getElementById('leaveType').value = "0";
+    }
+    // 만약 휴가종류가 "반차"라면
+    else if (leaveTypeValue === "반차") {
+        // 해당 필드의 값을 "1"으로 변경합니다.
+        document.getElementById('leaveType').value = "1";
+    }
+    // 그 외의 경우에는 아무 작업도 하지 않습니다.
+});
  
  
   

@@ -53,7 +53,21 @@ public class ApprovalController {
   
   @GetMapping("/detail.do")
   public String detail(@RequestParam int requestNo, Model model) {
-     
+     model.addAttribute("leaveRequests", requestsService.getRequestsbyNo(requestNo));
+     return "requests/detail";
+  }
+  
+  @GetMapping("/approval.page")
+  public String approvalPage() {
+	  return"requests/approval";
+  }
+  
+  @PostMapping("/requestModify.do")
+  public String requestModify(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+	  int modifyCount = requestsService.createLeaveRequest(request);
+	  redirectAttributes.addFlashAttribute("modifyCount", modifyCount == 1  ? "기안되었습니다." : "기안 되지 않았습니다");
+	   
+	    return "redirect:/requests/approval.page"; // 리디렉션
   }
   
 }

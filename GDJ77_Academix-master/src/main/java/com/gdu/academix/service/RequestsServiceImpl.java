@@ -42,17 +42,20 @@ public class RequestsServiceImpl implements RequestsService {
 	    int requestSort = Integer.parseInt(request.getParameter("requestSort"));
 	    
 	    DepartMentsDto depart = new DepartMentsDto();
-	    depart.setName(departName);
+	    depart.setDepartName(departName);
+
+	    
 	    RanksDto rank = new RanksDto();
-	    rank.setTitle(rankTitle);
+	    rank.setRankTitle(rankTitle);
 	    
 	    EmployeesDto employees = EmployeesDto.builder()
+	    		                             .name(name)
 	                                         .depart(depart)
-	                                         .name(name)
 	                                         .employeeNo(employeeNo)
 	                                         .rank(rank)
-	                                         
 	                                         .build();
+	    System.out.println(employees);
+	    
 	    RequestsDto requests = RequestsDto.builder()
 	                                      .employees(employees)
 	                                      .requestSort(requestSort)
@@ -81,13 +84,13 @@ public class RequestsServiceImpl implements RequestsService {
 	                                                  .duration(duration)
 	                                                  .leaveType(leaveType)
 	                                                  .build();
-	    
+	    System.out.println(employees);
 	    int insertCount = requestsMapper.insertRequest(requests);
 	    int requestNo = requests.getRequestNo(); // 요청에서 requestNo 가져오기
 	    leaveRequest.getRequests().setRequestNo(requestNo); // LeaveRequestDto에 설정
 	     insertCount += requestsMapper.insertLeaveRequest(leaveRequest);
 	    
-	    
+	    System.out.println(leaveRequest);
 	    return insertCount;
   }
   
@@ -118,10 +121,20 @@ public class RequestsServiceImpl implements RequestsService {
 	}
   
   @Override
-	public RequestsDto getRequestsbyNo(int requestNo) {
+	public LeaveRequestDto getRequestsbyNo(int requestNo) {
 		
-		return null;
+		return requestsMapper.getRequestsbyNo(requestNo);
 	}
   
+  @Override
+	public int requestModify(HttpServletRequest request) {
+	  int requestStatus = Integer.parseInt(request.getParameter("requestStatus"));
+	  
+	  RequestsDto requests = RequestsDto.builder()
+			  						    .requestStatus(requestStatus)
+			  						    .build();
+	  int moddifyCount = requestsMapper.modifyRequests(requests);
+		return moddifyCount;
+	}
 
 }
