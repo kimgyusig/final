@@ -53,6 +53,37 @@
             width: 100%;
             box-sizing: border-box;
         }
+        
+        
+    
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 내용 스타일 */
+.modal-content {
+    width: 300px;
+    height: auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* 닫기 버튼 스타일 */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
 
 </style>
   
@@ -73,7 +104,7 @@
           id="frm-requests-modify" onsubmit="submitFormWithApproval()">
           <div>
      <button type="submit" id="btn-approval">승인</button>
-     <button type="button" id="" onclick="rejectRequest()">반려</button>
+     <button type="button" id="modal" onclick="openModal()" >반려</button>
     </div>
         <table>
             <tr>
@@ -124,8 +155,7 @@
                 <input type="hidden" name="picNo" value="0">
                 <input type="hidden" name="requestStatus" value="0">
                 <input type="hidden" name="requestSort" value="1">
-                   <label for="employeeNo">사원번호</label>
-            ${leaveRequests.requests.employees.employeeNo}
+            
             </tr>
         </table>
         <div style="text-align: center; margin-top: 20px;">
@@ -133,8 +163,26 @@
         </div>
     </form>
     
-   
    </div>
+   
+   
+   <div id="myModal" class="modal">
+   <form action="${contextPath}/requests/reject.do"
+   		 method="POST" id="frm-reject">
+    <div class="modal-content">
+        <!-- 닫기 버튼 -->
+        <span class="close" onclick="closeModal()">&times;</span>
+        <!-- 사유 입력란 -->
+        <label for="rejectReason">사유:</label>
+        <textarea id="rejectReason" name="rejectReason" rows="4" cols="50"></textarea>
+        <input type="hidden" name="requestNo" id="requestNo" value="2">
+        <br>
+        <!-- 반려 버튼 -->
+        <button onclick="submit">반려하기</button>
+        <button onclick="closeModal()">취소</button>
+    </div>
+    </form>
+</div>
   
  </div>
   
@@ -160,6 +208,20 @@
     			}
     	  })
     	}
+     
+  // 모달 열기 함수
+     function openModal() {
+         var modal = document.getElementById('myModal');
+         modal.style.display = 'flex';
+     }
+
+     // 모달 닫기 함수
+     function closeModal() {
+         var modal = document.getElementById('myModal');
+         modal.style.display = 'none';
+     }
+
+     
 
      fnRemoveRequest();
      
