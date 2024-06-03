@@ -181,4 +181,28 @@ WHERE L.REQUEST_NO =#{requestNo}
 	
 </update>
 
+
+<delete id="removeRequest2"
+        parameterType="int">
+	DELETE
+	  FROM LEAVE_REQUEST_T
+	WHERE REQUEST_NO = #{requestNo}  
+</delete>
+
+<delete id="removeRequest3"
+        parameterType="int">
+	DELETE
+	  FROM REQUEST_ATTACH_T
+	WHERE REQUEST_NO = #{requestNo}  
+</delete>
+
+<delete id="removeRequest"
+        parameterType="int">
+	DELETE
+	  FROM REQUESTS_T
+	WHERE REQUEST_NO = #{requestNo}  
+</delete>
+
+
+
 </mapper>

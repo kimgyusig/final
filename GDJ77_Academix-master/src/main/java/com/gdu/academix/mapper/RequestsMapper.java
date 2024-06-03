@@ -18,4 +18,7 @@ public interface RequestsMapper {
   int getRequestsCount();
   LeaveRequestDto getRequestsbyNo(int requestNo);
   int modifyRequests(RequestsDto requests);
+  int removeRequest(int requestNo);
+  int removeRequest2(int requestNo);
+  int removeRequest3(int requestNo);
 }

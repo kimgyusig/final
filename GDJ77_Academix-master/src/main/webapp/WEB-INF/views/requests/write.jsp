@@ -5,6 +5,10 @@
 <c:set var="contextPath" value="<%=request.getContextPath()%>"/>
 <c:set var="dt" value="<%=System.currentTimeMillis()%>"/>
 
+
+
+
+
 <jsp:include page="${contextPath}/WEB-INF/views/layout/header.jsp">
    <jsp:param value="전자결재" name="title"/>
  </jsp:include>
@@ -117,14 +121,20 @@ button:hover {
             <div class="form-group">
                 <label for="departName">부서명</label>
                 <input type="text" name="departName" id="departName">
+            </div>
+            <div class="form-group">
                 <label for="name">성명</label>
                 <input type="text" name="name" id="name">
             </div>
             <div class="form-group">
                 <label for="rankTitle">직책</label>
                 <input type="text" name="rankTitle" id="rankTitle">
-                <label for="leaveType">휴가종류</label>
-                <input type="text" name="leaveType" id="leaveType">
+            </div>
+            <div class="form-group">
+                <label for="all-day">연차</label>
+                <input type="radio" name="leaveType" id="all-day" value="0">
+                <label for="half-day">반차</label>
+                <input type="radio" name="leaveType" id="half-day" value="1">
             </div>
             <div class="form-group reason">
                 <label for="reason">사유</label>
@@ -148,6 +158,8 @@ button:hover {
         <input type="hidden" name="requestSort" value="1">
     </form>
 
+
+
 </div>
 <script>
 
@@ -169,6 +181,73 @@ document.querySelector('form').addEventListener('submit', function(event) {
     }
     // 그 외의 경우에는 아무 작업도 하지 않습니다.
 });
+ 
+ 
+ 
+$(document).ready(function () {
+    $.datepicker.setDefaults($.datepicker.regional['ko']); 
+    $( "#startDate" ).datepicker({
+         changeMonth: true, 
+         changeYear: true,
+         nextText: '다음 달',
+         prevText: '이전 달', 
+         dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+         dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'], 
+         monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+         monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+         dateFormat: "yy-mm-dd",
+         maxDate: 0,                       // 선택할수있는 최소날짜, ( 0 : 오늘 이후 날짜 선택 불가)
+         onClose: function( selectedDate ) {    
+              //시작일(startDate) datepicker가 닫힐때
+              //종료일(endDate)의 선택할수있는 최소 날짜(minDate)를 선택한 시작일로 지정
+             $("#endDate").datepicker( "option", "minDate", selectedDate );
+         }    
+
+    });
+    $( "#endDate" ).datepicker({
+         changeMonth: true, 
+         changeYear: true,
+         nextText: '다음 달',
+         prevText: '이전 달', 
+         dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+         dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'], 
+         monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+         monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+         dateFormat: "yy-mm-dd",
+         maxDate: 0,                       // 선택할수있는 최대날짜, ( 0 : 오늘 이후 날짜 선택 불가)
+         onClose: function( selectedDate ) {    
+             // 종료일(endDate) datepicker가 닫힐때
+             // 시작일(startDate)의 선택할수있는 최대 날짜(maxDate)를 선택한 시작일로 지정
+             $("#startDate").datepicker( "option", "maxDate", selectedDate );
+         }    
+
+    });    
+});
+ 
+ 
+/* $(document).ready(function() {
+    // 휴가종류 입력란이 변경될 때마다 실행되는 이벤트 핸들러
+    $("#leaveType").change(function() {
+        // 선택된 휴가종류 값을 가져옴
+        var leaveType = $(this).val();
+        
+        // 휴가종류가 '연차'인 경우
+        if (leaveType === '연차') {
+            // 휴가종류 입력란의 값을 0으로 설정 (연차의 경우)
+            $("input[name='leaveType']").val("0");
+        }
+        // 휴가종류가 '반차'인 경우
+        else if (leaveType === '반차') {
+            // 휴가종류 입력란의 값을 1으로 설정 (반차의 경우)
+            $("input[name='leaveType']").val("1");
+        }
+        // 이 외의 경우 (예: 다른 휴가종류)
+        else {
+            // 특별한 동작 없음
+            // 원하는 경우 다른 휴가종류에 대한 처리를 여기에 추가할 수 있습니다.
+        }
+    });
+}); */
  
  
   

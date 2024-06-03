@@ -70,4 +70,12 @@ public class ApprovalController {
 	    return "redirect:/requests/approval.page"; // 리디렉션
   }
   
+  @PostMapping("/removeRequest.do")
+  public  String removeRequest(@RequestParam(value="requestNo", required=false, defaultValue="0") int requestNo
+          , RedirectAttributes redirectAttributes) {
+			int removeCount = requestsService.removeRequest(requestNo);
+			redirectAttributes.addFlashAttribute("removeResult", removeCount == 1 ? "블로그가 삭제되었습니다." : "블로그가 삭제되지 않았습니다.");
+			return "redirect:/requests/main.page";
+	}
+  
 }

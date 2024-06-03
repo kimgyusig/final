@@ -57,10 +57,14 @@
 </style>
   
   
-  
 
   
  <div class="content-wrapper">
+  <form id="frm-btn" method="POST">  
+        <input type="hidden" name="requestNo" value="${leaveRequests.requests.requestNo}">
+        <button type="button" id="btn-edit" class="btn btn-warning btn-sm">편집</button>
+        <button type="button" id="btn-remove" class="btn btn-danger btn-sm">삭제</button>
+      </form>
    <div class="start" data-set-employee-no="${leaveRequests.requests.employees.employeeNo}">
     
   ${leaveRequests.requests.requestNo}
@@ -146,6 +150,20 @@
         document.getElementById("requestStatus").value = "2";
     }
     
+     var frmBtn = document.getElementById('frm-btn');
+     
+     const fnRemoveRequest = () => {
+    		document.getElementById('btn-remove').addEventListener('click', (evt) => {
+    			if(confirm('해당 게시글을 삭제할까요?')){
+    	      frmBtn.action = '${contextPath}/requests/removeRequest.do';
+    	      frmBtn.submit();
+    			}
+    	  })
+    	}
+
+     fnRemoveRequest();
+     
+     
   </script>
 
 <jsp:include page="${contextPath}/WEB-INF/views/layout/footer.jsp" />

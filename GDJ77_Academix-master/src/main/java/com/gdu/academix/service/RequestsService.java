@@ -16,4 +16,5 @@ public interface RequestsService {
   ResponseEntity<Map<String, Object>> getList(HttpServletRequest request);
   LeaveRequestDto getRequestsbyNo(int requestNo);
   int requestModify(HttpServletRequest request);
+  int removeRequest(int requestNo);
 }

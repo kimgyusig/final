@@ -69,7 +69,8 @@ public class RequestsServiceImpl implements RequestsService {
 	    String startDateString = request.getParameter("startDate");
 	    String endDateString = request.getParameter("endDate");
 	    int leaveType = Integer.parseInt(request.getParameter("leaveType"));
-
+	     
+	    
 	    LocalDate startDate = LocalDate.parse(startDateString);
 	    LocalDate endDate = LocalDate.parse(endDateString);
 
@@ -137,4 +138,13 @@ public class RequestsServiceImpl implements RequestsService {
 		return moddifyCount;
 	}
 
+  @Transactional
+  @Override
+	public int removeRequest(int requestNo) {
+	  int deleteCount = requestsMapper.removeRequest2(requestNo);
+	  deleteCount += requestsMapper.removeRequest3(requestNo);
+	   deleteCount += requestsMapper.removeRequest(requestNo);
+		return deleteCount;
+	}
+  
 }
